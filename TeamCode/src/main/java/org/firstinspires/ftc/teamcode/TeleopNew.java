@@ -14,8 +14,10 @@ public class TeleopNew extends LinearOpMode {
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor front right");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor back right");
 
-        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        double scale = 0.6;
 
         waitForStart();
 
@@ -27,10 +29,10 @@ public class TeleopNew extends LinearOpMode {
             double rx = gamepad1.right_stick_x;
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
+            double frontLeftPower = scale * (y + x + rx) / denominator;
+            double backLeftPower = scale * (y - x + rx) / denominator;
+            double frontRightPower = scale * (y - x - rx) / denominator;
+            double backRightPower = scale * (y + x - rx) / denominator;
 
             motorFrontLeft.setPower(frontLeftPower);
             motorBackLeft.setPower(backLeftPower);
