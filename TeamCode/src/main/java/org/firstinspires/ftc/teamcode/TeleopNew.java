@@ -17,7 +17,7 @@ public class TeleopNew extends LinearOpMode {
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        double scale = 0.6;
+        double scale = 0.75;
 
         waitForStart();
 
