@@ -1,6 +1,7 @@
 // Team11288_Teleop
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +13,8 @@ import com.qualcomm.robotcore.util.Range;
  * Assumes claw with arm having shoulder motor, elbow servo and wrist servo - all having 180deg servos
  *
  */
-@TeleOp(name = "TeleopDrivegoBILDA", group = "Teleop")
+@Disabled
+@TeleOp(name = "TeleopOld", group = "Teleop")
 public class TeleopOld extends OpMode {
 
     float gear = 1f, multiplier = 0.6f;
