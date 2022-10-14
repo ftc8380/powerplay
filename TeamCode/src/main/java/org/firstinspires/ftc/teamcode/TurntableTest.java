@@ -1,14 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@TeleOp
 public class TurntableTest extends LinearOpMode {
 
     private final double TICKS_PER_REV = 1120.0;
 
     private final double TICKS_PER_DEGREE = TICKS_PER_REV / 360;
-    private final double MOTOR_POWER = 0.75;
+    private final double MOTOR_POWER = 1.0;
     private DcMotor mainMotor;
 
     public void runOpMode() {
@@ -36,6 +38,7 @@ public class TurntableTest extends LinearOpMode {
     void setupMotor() {
         mainMotor = hardwareMap.dcMotor.get("motor lift");
         mainMotor.setTargetPosition(0);
+        mainMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mainMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
