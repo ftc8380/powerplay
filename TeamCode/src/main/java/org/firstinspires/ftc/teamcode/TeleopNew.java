@@ -27,11 +27,13 @@ public class TeleopNew extends LinearOpMode {
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor back right");
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        double scale = 0.75; // 1.0 speed is a bit too fast
+        double scale = 0.5; // 1.0 speed is a bit too fast
 
         // Used for single trigger pull detection
         Gamepad currentGamepad2 = new Gamepad();
         Gamepad previousGamepad2 = new Gamepad();
+        Gamepad currentGamepad1 = new Gamepad();
+        Gamepad previousGamepad1 = new Gamepad();
 
         // Empirically tuned for effective grabbing
         double servoMilliseconds = 2750;
@@ -48,7 +50,9 @@ public class TeleopNew extends LinearOpMode {
         while (opModeIsActive()) {
             // This makes toggle switches possible
             try {
+                previousGamepad1.copy(currentGamepad1);
                 previousGamepad2.copy(currentGamepad2);
+                currentGamepad1.copy(gamepad1);
                 currentGamepad2.copy(gamepad2);
             }
             catch (RobotCoreException e) {
@@ -56,9 +60,13 @@ public class TeleopNew extends LinearOpMode {
             }
 
             // Slow mode
-            if(gamepad1.right_trigger > 0.5 || gamepad1. left_trigger > 0.5) {
+            if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
+                scale = 0.1;
+            } else if(currentGamepad1.dpad_left && !previousGamepad1.dpad_left) {
                 scale = 0.25;
-            } else {
+            } else if(currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
+                scale = 0.5;
+            } else if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
                 scale = 0.75;
             }
 
@@ -78,16 +86,13 @@ public class TeleopNew extends LinearOpMode {
             // Lift logic
             motorLift.setPower(0.8);
             if (gamepad2.dpad_up) { // Max height
-                motorLift.setTargetPosition(rotationsToTicks(7.5));
-            }
-            if (gamepad2.dpad_down) { // Fully retracted
+                motorLift.setTargetPosition(rotationsToTicks(6.75));
+            } else if (gamepad2.dpad_down) { // Fully retracted
                 motorLift.setTargetPosition(0);
-            }
-            if(gamepad2.dpad_left) {
+            } else if(gamepad2.dpad_left) {
                 motorLift.setTargetPosition(rotationsToTicks(0.5));
-            }
-            if(gamepad2.dpad_right) {
-                motorLift.setTargetPosition(rotationsToTicks(6));
+            } else if(gamepad2.dpad_right) {
+                motorLift.setTargetPosition(rotationsToTicks(4.75   ));
             }
 
             // LT pulled and claw tight
@@ -101,7 +106,7 @@ public class TeleopNew extends LinearOpMode {
             }
 
             // RT pulled and claw loose
-            if (currentGamepad2.right_trigger > 0.5 && previousGamepad2.right_trigger <= 0.5 && isLoose) {
+            else if (currentGamepad2.right_trigger > 0.5 && previousGamepad2.right_trigger <= 0.5 && isLoose) {
                 timer.reset();
                 while(timer.milliseconds() <= servoMilliseconds) {
                     servoIntake.setPower(-servoPower);
