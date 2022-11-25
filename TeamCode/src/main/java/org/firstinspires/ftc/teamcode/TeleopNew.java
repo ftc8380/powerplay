@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -34,6 +35,10 @@ public class TeleopNew extends LinearOpMode {
         Gamepad previousGamepad2 = new Gamepad();
         Gamepad currentGamepad1 = new Gamepad();
         Gamepad previousGamepad1 = new Gamepad();
+
+        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(new BNO055IMU.Parameters());
+
 
         // Empirically tuned for effective grabbing
         double servoMilliseconds = 2750;
@@ -73,11 +78,14 @@ public class TeleopNew extends LinearOpMode {
             double y = -gamepad1.left_stick_y; // Why is y still reversed
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
+            double botHeading = -imu.getAngularOrientation().firstAngle;
+            double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
+            double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = scale * (y + x + rx) / denominator;
-            double backLeftPower = scale * (y - x + rx) / denominator;
-            double frontRightPower = scale * (y - x - rx) / denominator;
-            double backRightPower = scale * (y + x - rx) / denominator;
+            double frontLeftPower = scale * (rotY + rotX + rx) / denominator;
+            double backLeftPower = scale * (rotY - rotX + rx) / denominator;
+            double frontRightPower = scale * (rotY - rotX - rx) / denominator;
+            double backRightPower = scale * (rotY + rotX - rx) / denominator;
             motorFrontLeft.setPower(frontLeftPower);
             motorBackLeft.setPower(backLeftPower);
             motorFrontRight.setPower(frontRightPower);
