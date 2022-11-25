@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp
+@Autonomous
+@Disabled
 public class Tighten extends LinearOpMode {
     public void runOpMode() {
         CRServo servoIntake = hardwareMap.crservo.get("servo intake");
@@ -21,6 +24,10 @@ public class Tighten extends LinearOpMode {
             servoIntake.setPower(-servoPower);
         }
         servoIntake.setPower(0);
+
+        while(timer.seconds() <= 30) {
+
+        }
 
     }
 }

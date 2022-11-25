@@ -39,7 +39,7 @@ public class TeleopNew extends LinearOpMode {
         double servoMilliseconds = 2750;
         double servoPower = 1.0;
         CRServo servoIntake = hardwareMap.crservo.get("servo intake");
-        boolean isLoose = false; // Disallows tightening if already tight and loosening if already loose
+        boolean isLoose = true; // Disallows tightening if already tight and loosening if already loose
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
 
@@ -86,13 +86,13 @@ public class TeleopNew extends LinearOpMode {
             // Lift logic
             motorLift.setPower(0.8);
             if (gamepad2.dpad_up) { // Max height
-                motorLift.setTargetPosition(rotationsToTicks(6.75));
+                motorLift.setTargetPosition(rotationsToTicks(6.9));
             } else if (gamepad2.dpad_down) { // Fully retracted
                 motorLift.setTargetPosition(0);
             } else if(gamepad2.dpad_left) {
                 motorLift.setTargetPosition(rotationsToTicks(0.5));
             } else if(gamepad2.dpad_right) {
-                motorLift.setTargetPosition(rotationsToTicks(4.75   ));
+                motorLift.setTargetPosition(rotationsToTicks(4.9));
             }
 
             // LT pulled and claw tight
