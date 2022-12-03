@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 /* For copying this OpMode you really just want to change startpose and trajectories 1-3
  Leave everything else as-is */
-@Disabled
-public class AutoA2Park extends LinearOpMode {
+@Autonomous
+public class AutoPark extends LinearOpMode {
 
     final int LEFT = 1, MIDDLE = 2, RIGHT = 3;
     OpenCvCamera camera;
@@ -28,24 +28,23 @@ public class AutoA2Park extends LinearOpMode {
     public void runOpMode() {
 
         // setPoseEstimate is very important so robot knows where it's starting
-        Pose2d startPose = new Pose2d(-34, 61, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(36, 59, Math.toRadians(-90));
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(startPose);
 
         // Create new TrajectorySequence for every possible parking spot
         TrajectorySequence location1 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-12, 61, Math.toRadians(-90)))
-                .lineToLinearHeading(new Pose2d(-12, 19, Math.toRadians(-90)))
-                .build();
- 
-        TrajectorySequence location2 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-34.5, 25, Math.toRadians(-90)))
+                .strafeLeft(24)
+                .forward(42)
                 .build();
 
+        TrajectorySequence location2 = drive.trajectorySequenceBuilder(startPose)
+                .forward(42)
+                .build();
 
         TrajectorySequence location3 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-60, 61, Math.toRadians(-90)))
-                .lineToLinearHeading(new Pose2d(-60, 24, Math.toRadians(-90)))
+                .strafeRight(24)
+                .forward(42)
                 .build();
 
         // Connecting to webcam shouldn't be this verbose but it is
@@ -91,7 +90,7 @@ public class AutoA2Park extends LinearOpMode {
         } else if (detectedTag == RIGHT) {
             drive.followTrajectorySequence(location3);
 
-        // Default to position 2 if AprilTag not found
+            // Default to position 2 if AprilTag not found
         } else {
             drive.followTrajectorySequence(location2);
         }

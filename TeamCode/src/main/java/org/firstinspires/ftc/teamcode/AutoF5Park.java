@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 
 /* For copying this OpMode you really just want to change startpose and trajectories 1-3
  Leave everything else as-is */
-@Autonomous
+@Disabled
 public class AutoF5Park extends LinearOpMode {
 
     final int LEFT = 1, MIDDLE = 2, RIGHT = 3;
