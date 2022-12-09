@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp
@@ -39,14 +40,7 @@ public class TeleopNew extends LinearOpMode {
         BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(new BNO055IMU.Parameters());
 
-
-        // Empirically tuned for effective grabbing
-        double servoMilliseconds = 2750;
-        double servoPower = 1.0;
-        CRServo servoIntake = hardwareMap.crservo.get("servo intake");
-        boolean isLoose = true; // Disallows tightening if already tight and loosening if already loose
-        ElapsedTime timer = new ElapsedTime();
-        timer.reset();
+        Servo servoIntake = hardwareMap.servo.get("servo intake");
 
         waitForStart();
 
@@ -103,26 +97,12 @@ public class TeleopNew extends LinearOpMode {
                 motorLift.setTargetPosition(rotationsToTicks(4.9));
             }
 
-            // LT pulled and claw tight
-            if (currentGamepad2.left_trigger > 0.5 && previousGamepad2.left_trigger <= 0.5 && !isLoose) {
-                timer.reset();
-                while(timer.milliseconds() <= servoMilliseconds) {
-                    servoIntake.setPower(servoPower);
-                }
-                servoIntake.setPower(0);
-                isLoose = !isLoose;
+            // Righty tighty lefty loosy
+            if(gamepad2.right_trigger > 0.5) {
+                servoIntake.setPosition(0.25);
+            } else if(gamepad2.left_trigger > 0.5) {
+                servoIntake.setPosition(0);
             }
-
-            // RT pulled and claw loose
-            else if (currentGamepad2.right_trigger > 0.5 && previousGamepad2.right_trigger <= 0.5 && isLoose) {
-                timer.reset();
-                while(timer.milliseconds() <= servoMilliseconds) {
-                    servoIntake.setPower(-servoPower);
-                }
-                servoIntake.setPower(0);
-                isLoose = !isLoose;
-            }
-
 
         }
     }
