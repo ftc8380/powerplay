@@ -37,7 +37,6 @@ public class AutoConeLeft extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         DcMotor motorLift = hardwareMap.dcMotor.get("motor lift");
-        motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
         motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setTargetPosition(0);
         motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -45,15 +44,15 @@ public class AutoConeLeft extends LinearOpMode {
 
         TrajectorySequence goToHighJunction = drive.trajectorySequenceBuilder(startPose)
                 .forward(28)
-                .strafeRight(40)
+                .strafeRight(41)
                 .addTemporalMarker(() -> {
                     motorLift.setTargetPosition(rotationsToTicks(7.2));
                 })
                 .waitSeconds(2)
-                .forward(4,
+                .forward(5,
                         SampleMecanumDrive.getVelocityConstraint(7, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(7))
-                .waitSeconds(5)
+                .waitSeconds(2)
                 .addTemporalMarker(() -> {
                     servoIntake.setPosition(0);
                 })
@@ -65,6 +64,7 @@ public class AutoConeLeft extends LinearOpMode {
                 .addTemporalMarker(() -> {
                     motorLift.setTargetPosition(0);
                 })
+                .waitSeconds(2)
                 .build();
 
         // Create new TrajectorySequence for every possible parking spot
@@ -118,7 +118,7 @@ public class AutoConeLeft extends LinearOpMode {
         }
 
         // User hit PLAY, let's go
-        servoIntake.setPosition(0.5);
+        servoIntake.setPosition(0.6);
         sleep(1000);
         motorLift.setPower(0.8);
         motorLift.setTargetPosition(rotationsToTicks(0.5));
@@ -135,6 +135,8 @@ public class AutoConeLeft extends LinearOpMode {
         } else {
             drive.followTrajectorySequence(location2);
         }
+
+        motorLift.setPower(0);
 
     }
 

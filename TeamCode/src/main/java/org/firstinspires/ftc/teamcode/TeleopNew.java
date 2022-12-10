@@ -18,7 +18,6 @@ public class TeleopNew extends LinearOpMode {
 
         // For some reason FTC forces you to set target position before RUN_TO_POSITION encoder mode
         DcMotor motorLift = hardwareMap.dcMotor.get("motor lift");
-        motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
         motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setTargetPosition(0);
         motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -29,7 +28,7 @@ public class TeleopNew extends LinearOpMode {
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor back right");
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        double scale = 0.5; // 1.0 speed is a bit too fast
+        double scale = 0.6; // 1.0 speed is a bit too fast
 
         // Used for single trigger pull detection
         Gamepad currentGamepad2 = new Gamepad();
@@ -60,11 +59,11 @@ public class TeleopNew extends LinearOpMode {
 
             // Slow mode
             if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
-                scale = 0.1;
-            } else if(currentGamepad1.dpad_left && !previousGamepad1.dpad_left) {
                 scale = 0.25;
+            } else if(currentGamepad1.dpad_left && !previousGamepad1.dpad_left) {
+                scale = 0.6;
             } else if(currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
-                scale = 0.5;
+                scale = 0.6;
             } else if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
                 scale = 0.75;
             }
@@ -86,7 +85,7 @@ public class TeleopNew extends LinearOpMode {
             motorBackRight.setPower(backRightPower);
 
             // Lift logic
-            motorLift.setPower(0.8);
+            motorLift.setPower(0.6);
             if (gamepad2.dpad_up) { // Max height
                 motorLift.setTargetPosition(rotationsToTicks(6.9));
             } else if (gamepad2.dpad_down) { // Fully retracted
