@@ -43,13 +43,13 @@ public class AutoConeLeft extends LinearOpMode {
         Servo servoIntake = hardwareMap.servo.get("servo intake");
 
         TrajectorySequence goToHighJunction = drive.trajectorySequenceBuilder(startPose)
-                .forward(28)
-                .strafeRight(41)
+                .forward(28.65)
+                .strafeRight(40.75)
                 .addTemporalMarker(() -> {
                     motorLift.setTargetPosition(rotationsToTicks(7.2));
                 })
                 .waitSeconds(2)
-                .forward(5,
+                .forward(6.5,
                         SampleMecanumDrive.getVelocityConstraint(7, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(7))
                 .waitSeconds(2)
@@ -57,7 +57,7 @@ public class AutoConeLeft extends LinearOpMode {
                     servoIntake.setPosition(0);
                 })
                 .waitSeconds(2)
-                .back(4,
+                .back(6,
                         SampleMecanumDrive.getVelocityConstraint(7, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(7))
                 .waitSeconds(1)
@@ -69,7 +69,7 @@ public class AutoConeLeft extends LinearOpMode {
 
         // Create new TrajectorySequence for every possible parking spot
         TrajectorySequence location1 = drive.trajectorySequenceBuilder(goToHighJunction.end())
-                .strafeLeft(64)
+                .strafeLeft(72)
                 .build();
 
         TrajectorySequence location2 = drive.trajectorySequenceBuilder(goToHighJunction.end())

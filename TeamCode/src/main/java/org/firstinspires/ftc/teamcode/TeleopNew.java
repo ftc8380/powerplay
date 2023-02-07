@@ -17,6 +17,7 @@ public class TeleopNew extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         // For some reason FTC forces you to set target position before RUN_TO_POSITION encoder mode
+
         DcMotor motorLift = hardwareMap.dcMotor.get("motor lift");
         motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setTargetPosition(0);
@@ -28,7 +29,7 @@ public class TeleopNew extends LinearOpMode {
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motor back right");
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        double scale = 0.6; // 1.0 speed is a bit too fast
+        double scale = 0.55; // 1.0 speed is a bit too fast
 
         // Used for single trigger pull detection
         Gamepad currentGamepad2 = new Gamepad();
@@ -40,12 +41,11 @@ public class TeleopNew extends LinearOpMode {
         imu.initialize(new BNO055IMU.Parameters());
 
         Servo servoIntake = hardwareMap.servo.get("servo intake");
-
         waitForStart();
 
         if (isStopRequested()) return;
 
-        while (opModeIsActive()) {
+        while(opModeIsActive()) {
             // This makes toggle switches possible
             try {
                 previousGamepad1.copy(currentGamepad1);
@@ -59,11 +59,11 @@ public class TeleopNew extends LinearOpMode {
 
             // Slow mode
             if(currentGamepad1.dpad_down && !previousGamepad1.dpad_down) {
-                scale = 0.25;
+                scale = 0.4;
             } else if(currentGamepad1.dpad_left && !previousGamepad1.dpad_left) {
-                scale = 0.6;
+                scale = 0.55;
             } else if(currentGamepad1.dpad_right && !previousGamepad1.dpad_right) {
-                scale = 0.6;
+                scale = 0.55;
             } else if(currentGamepad1.dpad_up && !previousGamepad1.dpad_up) {
                 scale = 0.75;
             }
@@ -95,7 +95,6 @@ public class TeleopNew extends LinearOpMode {
             } else if(gamepad2.dpad_right) {
                 motorLift.setTargetPosition(rotationsToTicks(4.9));
             }
-
             // Righty tighty lefty loosy
             if(gamepad2.right_trigger > 0.5) {
                 servoIntake.setPosition(0.25);

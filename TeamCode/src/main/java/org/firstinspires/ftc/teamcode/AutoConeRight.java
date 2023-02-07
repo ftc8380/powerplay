@@ -144,5 +144,6 @@ public class AutoConeRight extends LinearOpMode {
     private int rotationsToTicks(double rotations) {
         double ticksPerRotation = 384.5;
         return (int) (rotations * ticksPerRotation);
-    }
+    }   
 }
+
