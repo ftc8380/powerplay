@@ -18,11 +18,6 @@ public class TeleopNew extends LinearOpMode {
 
         // For some reason FTC forces you to set target position before RUN_TO_POSITION encoder mode
 
-        DcMotor motorLift = hardwareMap.dcMotor.get("motor lift");
-        motorLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorLift.setTargetPosition(0);
-        motorLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motor front left");
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motor back left");
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motor front right");
@@ -40,10 +35,11 @@ public class TeleopNew extends LinearOpMode {
         BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(new BNO055IMU.Parameters());
 
-        Servo servoIntake = hardwareMap.servo.get("servo intake");
+        Sliders v4b = new Sliders(hardwareMap);
         waitForStart();
 
         if (isStopRequested()) return;
+        v4b.floor();
 
         while(opModeIsActive()) {
             // This makes toggle switches possible
@@ -84,22 +80,20 @@ public class TeleopNew extends LinearOpMode {
             motorFrontRight.setPower(frontRightPower);
             motorBackRight.setPower(backRightPower);
 
-            // Lift logic
-            motorLift.setPower(0.6);
-            if (gamepad2.dpad_up) { // Max height
-                motorLift.setTargetPosition(rotationsToTicks(6.9));
-            } else if (gamepad2.dpad_down) { // Fully retracted
-                motorLift.setTargetPosition(0);
-            } else if(gamepad2.dpad_left) {
-                motorLift.setTargetPosition(rotationsToTicks(0.5));
+            if(gamepad2.dpad_up) {
+                v4b.highJunction();
             } else if(gamepad2.dpad_right) {
-                motorLift.setTargetPosition(rotationsToTicks(4.9));
+                v4b.midJunction();
+            } else if(gamepad2.dpad_left) {
+                    v4b.lowJunction();
+            } else if(gamepad2.dpad_down) {
+                v4b.floor();
             }
-            // Righty tighty lefty loosy
+
             if(gamepad2.right_trigger > 0.5) {
-                servoIntake.setPosition(0.25);
+                v4b.closeClaw();
             } else if(gamepad2.left_trigger > 0.5) {
-                servoIntake.setPosition(0);
+                v4b.openClaw();
             }
 
         }

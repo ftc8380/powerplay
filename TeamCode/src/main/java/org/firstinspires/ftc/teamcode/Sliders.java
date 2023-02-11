@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -17,12 +18,14 @@ public class Sliders {
     Servo servoRightV4b;
     DcMotor motorLiftLeft;
     DcMotor motorLiftRight;
+    Servo servoIntake;
 
-    public Sliders(DcMotor lm, DcMotor rm, Servo ls, Servo rs) {
-        motorLiftLeft = lm;
-        motorLiftRight = rm;
-        servoLeftV4b = ls;
-        servoRightV4b = rs;
+    public Sliders(HardwareMap hm) {
+        motorLiftLeft = hm.dcMotor.get("motor lift left");
+        motorLiftRight = hm.dcMotor.get("motor lift right");
+        servoLeftV4b = hm.servo.get("servo left v4b");
+        servoRightV4b = hm.servo.get("servo right v4b");
+        servoIntake = hm.servo.get("servo intake");
         motorLiftRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorLiftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLiftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -30,12 +33,20 @@ public class Sliders {
         motorLiftRight.setTargetPosition(0);
         motorLiftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorLiftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        ls.setDirection(Servo.Direction.REVERSE);
+        servoRightV4b.setDirection(Servo.Direction.REVERSE);
     }
 
     private int rotationsToTicks(double rotations) {
         double ticksPerRotation = 384.5;
         return (int) (rotations * ticksPerRotation);
+    }
+
+    public void openClaw() {
+        servoIntake.setPosition(1.0);
+    }
+
+    public void closeClaw() {
+        servoIntake.setPosition(0.5);
     }
 
     public void servoGrouping(double position) {
@@ -51,20 +62,24 @@ public class Sliders {
     }
 
     public void floor(){
-        servoGrouping(0.1);
-        motorGrouping(0);
+        closeClaw();
+        servoGrouping(0);
+        motorGrouping(0.3);
     }
     public void highJunction(){
-        servoGrouping(0.7);
-        motorGrouping(6.9);
+        closeClaw();
+        servoGrouping(0.6);
+        motorGrouping(3.5);
     }
     //we might just use v4b arms for this
     public void lowJunction(){
-        servoGrouping(0.7);
-        motorGrouping(0.5);
+        closeClaw();
+        servoGrouping(0);
+        motorGrouping(0.3);
     }
     public void midJunction(){
-        servoGrouping(0.7);
-        motorGrouping(4.9);
+        closeClaw();
+        servoGrouping(0.6);
+        motorGrouping(1.5);
     }
 }

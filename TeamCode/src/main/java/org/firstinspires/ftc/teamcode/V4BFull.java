@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 @Config
@@ -13,36 +10,32 @@ public class V4BFull extends LinearOpMode {
     public static double LIFTROTATIONS = 2;
 
     public void runOpMode() {
-        Sliders lift = new Sliders(hardwareMap.dcMotor.get("motor lift left"),
-                hardwareMap.dcMotor.get("motor lift right"),
-                hardwareMap.servo.get("servo left v4b"),
-                hardwareMap.servo.get("servo right v4b"));
-
-        Servo servoIntake = hardwareMap.servo.get("servo intake");
+        Sliders v4b = new Sliders(hardwareMap);
 
         waitForStart();
-        lift.floor();
+        v4b.floor();
 
         while(opModeIsActive()) {
 
-            telemetry.addData("LL", lift.motorLiftLeft.getCurrentPosition());
-            telemetry.addData("LR", lift.motorLiftRight.getCurrentPosition());
+            telemetry.addData("LL", v4b.motorLiftLeft.getCurrentPosition());
+            telemetry.addData("LR", v4b.motorLiftRight.getCurrentPosition());
             telemetry.update();
 
             // Lift control
             if(gamepad1.dpad_up) {
-                lift.highJunction();
+                v4b.highJunction();
 
             } else if(gamepad1.dpad_down) {
-                servoIntake.setPosition(0.5);
-                lift.floor();
+                v4b.floor();
+            } else if(gamepad1.dpad_right) {
+                v4b.midJunction();
             }
 
             // Intake control
             if(gamepad1.right_trigger > 0.5) {
-                servoIntake.setPosition(0.5);
+                v4b.closeClaw();
             } else if(gamepad1.left_trigger > 0.5) {
-                servoIntake.setPosition(0.9);
+                v4b.openClaw();
             }
         }
     }
