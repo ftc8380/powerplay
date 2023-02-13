@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
+import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.util.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -20,12 +20,14 @@ import java.util.ArrayList;
 @Autonomous
 public class AutoPark extends LinearOpMode {
 
+
     final int LEFT = 1, MIDDLE = 2, RIGHT = 3;
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     SampleMecanumDrive drive;
 
     public void runOpMode() {
+        Sliders v4b = new Sliders(hardwareMap);
 
         // setPoseEstimate is very important so robot knows where it's starting
         Pose2d startPose = new Pose2d(36, 59, Math.toRadians(-90));
@@ -35,16 +37,16 @@ public class AutoPark extends LinearOpMode {
         // Create new TrajectorySequence for every possible parking spot
         TrajectorySequence location1 = drive.trajectorySequenceBuilder(startPose)
                 .strafeLeft(24)
-                .forward(42)
+                .forward(50)
                 .build();
 
         TrajectorySequence location2 = drive.trajectorySequenceBuilder(startPose)
-                .forward(42)
+                .forward(50)
                 .build();
 
         TrajectorySequence location3 = drive.trajectorySequenceBuilder(startPose)
                 .strafeRight(24)
-                .forward(42)
+                .forward(50)
                 .build();
 
         // Connecting to webcam shouldn't be this verbose but it is
@@ -83,6 +85,8 @@ public class AutoPark extends LinearOpMode {
                 }
             }
         }
+
+        v4b.motorGrouping(0.3);
 
         // User hit PLAY, let's go
         if (detectedTag == LEFT) {

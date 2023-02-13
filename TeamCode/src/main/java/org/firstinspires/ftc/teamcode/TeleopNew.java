@@ -90,6 +90,14 @@ public class TeleopNew extends LinearOpMode {
                 v4b.floor();
             }
 
+            if(gamepad2.left_bumper) {
+                v4b.motorV4b.setPower(0.6);
+            } else if(gamepad2.right_bumper) {
+                v4b.motorV4b.setPower(-0.6);
+            } else {
+                v4b.motorV4b.setPower(0);
+            }
+
             if(gamepad2.right_trigger > 0.5) {
                 v4b.closeClaw();
             } else if(gamepad2.left_trigger > 0.5) {

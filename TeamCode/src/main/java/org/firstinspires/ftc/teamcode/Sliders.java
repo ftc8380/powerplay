@@ -9,22 +9,20 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 
 //also we'll change the values accordingly, these values are placeholders
 
 public class Sliders {
-    Servo servoLeftV4b;
-    Servo servoRightV4b;
     DcMotor motorLiftLeft;
     DcMotor motorLiftRight;
     Servo servoIntake;
+    DcMotor motorV4b;
 
     public Sliders(HardwareMap hm) {
         motorLiftLeft = hm.dcMotor.get("motor lift left");
         motorLiftRight = hm.dcMotor.get("motor lift right");
-        servoLeftV4b = hm.servo.get("servo left v4b");
-        servoRightV4b = hm.servo.get("servo right v4b");
         servoIntake = hm.servo.get("servo intake");
         motorLiftRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorLiftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -33,7 +31,12 @@ public class Sliders {
         motorLiftRight.setTargetPosition(0);
         motorLiftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorLiftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        servoRightV4b.setDirection(Servo.Direction.REVERSE);
+
+        motorV4b = hm.dcMotor.get("motor lift");
+        motorV4b.setDirection(DcMotor.Direction.REVERSE);
+        motorV4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorV4b.setTargetPosition(0);
+        motorV4b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     private int rotationsToTicks(double rotations) {
@@ -49,9 +52,14 @@ public class Sliders {
         servoIntake.setPosition(0.5);
     }
 
-    public void servoGrouping(double position) {
-        servoLeftV4b.setPosition(position);
-        servoRightV4b.setPosition(position);
+    public void motorV4bUp() {
+        motorV4b.setPower(-0.5);
+        motorV4b.setTargetPosition(2700);
+    }
+
+    public void motorV4bDown() {
+        motorV4b.setPower(-0.5);
+        motorV4b.setTargetPosition(0);
     }
 
     public void motorGrouping(double rotations){
@@ -63,23 +71,27 @@ public class Sliders {
 
     public void floor(){
         closeClaw();
-        servoGrouping(0);
+//        servoGrouping(0);
         motorGrouping(0.3);
+        //motorV4bDown();
     }
     public void highJunction(){
-        closeClaw();
-        servoGrouping(0.6);
+       closeClaw();
+//        servoGrouping(0.8);
         motorGrouping(3.5);
+       // motorV4bUp();
     }
     //we might just use v4b arms for this
     public void lowJunction(){
-        closeClaw();
-        servoGrouping(0);
+      closeClaw();
+//        servoGrouping(0);
         motorGrouping(0.3);
+        //motorV4bDown();
     }
     public void midJunction(){
-        closeClaw();
-        servoGrouping(0.6);
+//        closeClaw();
+//        servoGrouping(0.8);
         motorGrouping(1.5);
+        //motorV4bUp();
     }
 }

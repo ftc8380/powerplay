@@ -16,13 +16,14 @@ public class V4BTuner extends LinearOpMode {
         while(opModeIsActive()) {
             if(gamepad1.a) {
                 v4b.motorGrouping(LIFTROTATIONS);
-                v4b.servoGrouping(SERVOPOS);
+                //v4b.servoRightV4b.setPosition(SERVOPOS);
             }
             if(gamepad1.right_trigger > 0.5) {
                 v4b.closeClaw();
             } else if(gamepad1.left_trigger > 0.5) {
                 v4b.openClaw();
             }
+           // v4b.update();
         }
     }
 }
