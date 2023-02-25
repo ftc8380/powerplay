@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 @Config
-@Disabled
 public class IntakeTest extends LinearOpMode {
     public static double INTAKE_POS = 0.0;
     public void runOpMode() {

@@ -11,14 +11,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-
-//also we'll change the values accordingly, these values are placeholders
-
 public class Sliders {
     DcMotor motorLiftLeft;
     DcMotor motorLiftRight;
     Servo servoIntake;
     DcMotor motorV4b;
+
+    private double LIFT_TPR = 384.5;
+    private double V4B_TPR = 5281.1;
 
     public Sliders(HardwareMap hm) {
         motorLiftLeft = hm.dcMotor.get("motor lift left");
@@ -33,15 +33,10 @@ public class Sliders {
         motorLiftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         motorV4b = hm.dcMotor.get("motor lift");
-        motorV4b.setDirection(DcMotor.Direction.REVERSE);
+        motorV4b.setDirection(DcMotorSimple.Direction.REVERSE);
         motorV4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorV4b.setTargetPosition(0);
         motorV4b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-
-    private int rotationsToTicks(double rotations) {
-        double ticksPerRotation = 384.5;
-        return (int) (rotations * ticksPerRotation);
     }
 
     public void openClaw() {
@@ -52,46 +47,44 @@ public class Sliders {
         servoIntake.setPosition(0.5);
     }
 
+    public void v4b(double rotations) {
+        int ticks = (int) (V4B_TPR * rotations);
+        motorV4b.setPower(0.7);
+        motorV4b.setTargetPosition(ticks);
+    }
+
     public void motorV4bUp() {
-        motorV4b.setPower(-0.5);
-        motorV4b.setTargetPosition(2700);
+        v4b(0.5);
     }
 
     public void motorV4bDown() {
-        motorV4b.setPower(-0.5);
-        motorV4b.setTargetPosition(0);
+        v4b(0);
+        closeClaw();
     }
 
     public void motorGrouping(double rotations){
-        motorLiftLeft.setPower(0.5);
-        motorLiftRight.setPower(0.5);
-        motorLiftLeft.setTargetPosition(rotationsToTicks(rotations));
-        motorLiftRight.setTargetPosition(rotationsToTicks(rotations));
+        int ticks = (int) (rotations * LIFT_TPR);
+        motorLiftLeft.setPower(0.7);
+        motorLiftRight.setPower(0.7);
+        motorLiftLeft.setTargetPosition(ticks);
+        motorLiftRight.setTargetPosition(ticks + (int) (0.2 * LIFT_TPR));
     }
 
     public void floor(){
-        closeClaw();
-//        servoGrouping(0);
-        motorGrouping(0.3);
-        //motorV4bDown();
+        motorGrouping(0);
+        motorV4bDown();
     }
     public void highJunction(){
-       closeClaw();
-//        servoGrouping(0.8);
-        motorGrouping(3.5);
-       // motorV4bUp();
+        motorGrouping(3);
+       motorV4bUp();
     }
     //we might just use v4b arms for this
     public void lowJunction(){
-      closeClaw();
-//        servoGrouping(0);
-        motorGrouping(0.3);
-        //motorV4bDown();
+        motorGrouping(0.07);
+        motorV4bDown();
     }
     public void midJunction(){
-//        closeClaw();
-//        servoGrouping(0.8);
-        motorGrouping(1.5);
-        //motorV4bUp();
+        motorGrouping(1.2);
+        motorV4bUp();
     }
 }
