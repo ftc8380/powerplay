@@ -40,11 +40,11 @@ public class Sliders {
     }
 
     public void openClaw() {
-        servoIntake.setPosition(1.0);
+        servoIntake.setPosition(0.8);
     }
 
     public void closeClaw() {
-        servoIntake.setPosition(0.5);
+        servoIntake.setPosition(0.7);
     }
 
     public void v4b(double rotations) {
