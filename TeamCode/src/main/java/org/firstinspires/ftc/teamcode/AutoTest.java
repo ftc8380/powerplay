@@ -41,11 +41,12 @@ public class AutoTest extends LinearOpMode {
                 .strafeRight(12)
                 .back(24)
                 .build();
-        //like hell it will be 5
+        waitForStart();
+        v4b.openClaw();
+        drive.followTrajectorySequence(traj);
+
         for(int i = 0; i < 5; i++) {
-            //dont worry about it
             int finalI = i;
-            //putting this in a loop is it even halal? Will it work
             TrajectorySequence trajLoop = drive.trajectorySequenceBuilder(startPose)
                     .forward(50)
                     .turn(Math.toRadians(-90))
@@ -76,13 +77,9 @@ public class AutoTest extends LinearOpMode {
                     })
                     .waitSeconds(5)
                     .build();
+
+            drive.followTrajectorySequence(trajLoop);
         }
 
-
-        waitForStart();
-        v4b.openClaw();
-        drive.followTrajectorySequence(traj);
-        //do I have to do this multiple times if its looped. Also fix this error I want to go to sleep
-        drive.followTrajectorySequence(trajLoop);
     }
 }
