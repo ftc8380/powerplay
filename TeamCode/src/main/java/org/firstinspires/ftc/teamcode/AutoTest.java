@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -13,71 +12,61 @@ public class AutoTest extends LinearOpMode {
     public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Sliders v4b = new Sliders(hardwareMap);
-        float robotLength = 0;
         Pose2d startPose = new Pose2d();
+
+        double[] v4bPositions = {0.15, 0.14, 0.11, 0.1, 0.08, 0.06};
         TrajectorySequence traj = drive.trajectorySequenceBuilder(startPose)
                 //close the claw on the preloaded cone
-                .addTemporalMarker(() -> {
-                    v4b.closeClaw();
-                })
+                .addTemporalMarker(v4b::closeClaw)
                 .waitSeconds(1)
-                .forward(72 - robotLength/2)
-                .turn(Math.toRadians(-90))
-                .back(8)
-                .addTemporalMarker(() ->{
-                    v4b.highJunction();
-                })
+                .forward(50)
+                .turn(Math.toRadians(-135))
+                .back(10)
+                .addTemporalMarker(v4b::highJunction)
                 .waitSeconds(3)
-                .addTemporalMarker(() ->{
-                    v4b.openClaw();
-                })
+                .addTemporalMarker(v4b::openClaw)
                 .waitSeconds(1)
+                .addTemporalMarker(v4b::closeClaw)
+                .waitSeconds(1)
+                .forward(10)
                 .addTemporalMarker(() -> {
-                    v4b.floor();
+                    v4b.motorGrouping(0);
+                    v4b.v4b(v4bPositions[0]);
                 })
-                .waitSeconds(3)
-                .forward(8)
+                .turn(Math.toRadians(45))
                 //I dont even know if its right or left tbh or the length lets change
-                .strafeRight(12)
-                .back(24)
                 .build();
         waitForStart();
-        v4b.openClaw();
+
+        drive.setPoseEstimate(startPose);
         drive.followTrajectorySequence(traj);
 
-        for(int i = 0; i < 5; i++) {
+        for(int i = 1; i < 6; i++) {
             int finalI = i;
             TrajectorySequence trajLoop = drive.trajectorySequenceBuilder(startPose)
-                    .forward(50)
-                    .turn(Math.toRadians(-90))
-                    .forward(24)
                     //I dont know if its neccesary to add 2 temporalmarkers but I saw you do it so I guess
-                    .addTemporalMarker(() -> {
-                        //these values are bullshit I just want to go to sleep also I think doing it with the slides is more optimal but your call
-                        v4b.motorGrouping(1 - (finalI *0.05));
-                    })
-                    .waitSeconds(2)
-                    .addTemporalMarker(() -> {
-                        v4b.closeClaw();
-                    })
+                    .forward(15)
+                    .addTemporalMarker(v4b::closeClaw)
                     .waitSeconds(1)
-                    .back(24)
+                    .addTemporalMarker(() -> v4b.v4b(0.3))
+                    .back(15)
                     .turn(Math.toRadians(-45))
-                    .back(8)
-                    .addTemporalMarker(() -> {
-                        v4b.highJunction();
-                    })
+                    .back(10)
+                    .addTemporalMarker(v4b::highJunction)
                     .waitSeconds(3)
-                    .addTemporalMarker(() -> {
-                        v4b.openClaw();
-                    })
+                    .addTemporalMarker(v4b::openClaw)
                     .waitSeconds(1)
+                    .addTemporalMarker(v4b::closeClaw)
+                    .waitSeconds(1)
+                    .forward(10)
                     .addTemporalMarker(() -> {
-                        v4b.floor();
+                        v4b.motorGrouping(0);
+                        v4b.v4b(v4bPositions[finalI]);
                     })
-                    .waitSeconds(5)
+                    .turn(Math.toRadians(45))
                     .build();
 
+            drive.setPoseEstimate(startPose);
             drive.followTrajectorySequence(trajLoop);
         }
 
